@@ -1,0 +1,29 @@
+Ho prodotto due deliverable complementari: il wireframe interattivo che hai già visto sopra, e il documento di analisi funzionale completo (link qui sopra). Ti riassumo i punti chiave.
+Cosa l'utente può ricercare
+Il modello dati identifica tre entità indicizzate da OpenK9 (allineato all'AF Cecconi e alla KB GeDoP): Fascicolo (la pratica/contenitore), Scheda documentale (il "tab Profilo" del singolo documento, con i metadati di protocollo) e Documento (il file vero e proprio, su cui si fa full-text). La SERP le distingue con tab dedicati e badge colorati nelle card, perché gli utenti del DPC pensano in termini diversi ("la pratica del rimborso Alfa" vs "il decreto firmato ieri" vs "quel PDF specifico").
+Cosa l'utente può digitare
+Otto pattern di query reali dal dominio: keyword libere, numero di protocollo, codice fascicolo (es. 4.38.16.4/10494/2023), mittente/destinatario, espressioni temporali, persone (RPA/RUP/firmatari), tipologia+criterio, e in fase 2 linguaggio naturale via OpenK9 cognitivo. Default AND tra termini, con pattern recognition: se digiti 1335471 ti propone subito "Vai al protocollo n. 1335471" — pattern click and go per il caso d'uso più frequente.
+Filtri organizzati a tre livelli
+Per evitare il "Christmas tree":
+
+Primari sempre visibili: tipo entità (tab), tipologia documentale (dropdown con search per gestire le 152 tipologie raggruppate per macro-categoria), data (chip rapidi + range), banner ACL informativo
+Secondari collassabili: mittente, destinatario, fascicolo, classificazione (albero titolario), registro
+Avanzati a richiesta: tipologia flusso, stato firma, formato file, riservatezza/natura dato, stato fascicolo
+Smart custom: filtri condizionali che compaiono solo quando si seleziona una tipologia con metadati specifici (es. CIG/CUP per Fatture, RUP/Esito per FOIA, Richiedente/Stato avanzamento per Rimborsi VOL)
+
+Tutti i filtri sono AND tra loro, con counter dinamico per ogni opzione (PDF (231)).
+Dropdown con valori
+Quelli che ha senso popolare con elenchi predefiniti sono: tipologia documentale (152 voci da GetDocumentTemplates), classificazione (titolario gerarchico da GetActiveClassificationScheme), registro (da GetRegistersOrRF), tipologia flusso (A/P/I/G/Predisposto), stato firma, formato file. Mittente e destinatario invece restano autocomplete sulla rubrica P.I.Tre via SearchCorrespondents, perché l'enumerazione completa è impraticabile.
+Struttura area risultati
+Layout a due pannelli (filtri sinistra, risultati destra) con tab di entità in alto. Header risultati con counter e ordinamento. Card differenziate per tipo di entità con badge colorato distintivo:
+
+Fascicolo (viola): titolo + codice + stato + indicatori di consistenza ("3 schede, 14 documenti") + azione "Vedi documenti contenuti"
+Scheda (verde acqua): segnatura + mittente/destinatari + fascicolo di appartenenza + stato firma + allegati
+Documento (ambra): nome file + tipo/dimensione/versione + risalita gerarchica + azioni (anteprima/scarica)
+
+Snippet con highlighting in giallo, indicazione del campo dove è avvenuto il match ("Trovato in: Oggetto"), pannello anteprima laterale con OnlyOffice (già nello stack DPC, vantaggio importante).
+Tre punti che vi consiglio di non sottovalutare
+
+Banner ACL sempre visibile: la lamentela storica degli utenti DPC è "non rispetta i coni di visibilità". Mostrare esplicitamente "Risultati filtrati secondo le tue ACL — Cercando come [Ruolo X]" riduce la frustrazione e rende il comportamento prevedibile.
+Dati incompleti su 152 tipologie: dal file Metadati_Tipologie_Documentali.xlsx solo le prime 28 righe hanno metadati documentati, le altre sono tutte "Not in source". Prima di sviluppare i filtri smart custom (§4.4 dell'analisi) va recuperato il dato completo tramite GetDocumentTemplates dell'API P.I.Tre — questa è una dipendenza bloccante.
+Workshop con utenti reali prima dello sviluppo: ho raccomandato 5 profili tipici (addetto protocollo, RPA Volontariato, dirigente, funzionario UCI/FOIA, contabilità) per validare i pattern di query digitate. Senza questa validazione si rischia di costruire una SERP elegante che però non riflette come gli utenti realmente cercano.
