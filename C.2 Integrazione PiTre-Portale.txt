@@ -1,0 +1,33 @@
+Ho un quadro completo. Ora leggo il SOW per capire cosa va sviluppato nel nuovo portale e mappare le esigenze sui servizi disponibili.File visualizzato, eseguito un comandoFile visualizzato, eseguito un comandoImportante: il SOW si riferisce al Dipartimento della Protezione Civile (non al Consiglio di Trento, dove sta il manuale di gestione che ho già letto). Il P.I.Tre è il sistema di protocollo da cui partire/integrare. Leggo il resto del SOW per capire la soluzione "Spaces+".Eseguiti 3 comandiEseguiti 3 comandiHo il quadro completo. Ho tutti gli elementi per produrre un'analisi seria dell'integrazione. Le informazioni chiave che ho raccolto:
+Sul SOW (Spaces+ per Protezione Civile):
+
+Cliente diverso da quello del manuale (Dipartimento Protezione Civile, non Consiglio Trento) — ma P.I.Tre è la base condivisa
+Stack: Liferay DXP + Spaces+, Camunda BPM, OnlyOffice, Elasticsearch + OpenK9, Rocket.Chat
+3 fasi: Prototipo / Fase 1 / Fase 2 (5 workflow documentali totali)
+Integrazioni: SSO SAML, P.I.Tre via API, Firma Digitale
+Filosofia: P.I.Tre rimane "punto di certificazione documentale" (registro ufficiale), Spaces+ è "hub di collaborazione" → disaccoppiamento
+
+Sull'API REST P.I.Tre:
+
+Architettura via gateway RouteRestRequest con header ROUTED_ACTION + CODE_ADM
+Auth via GetToken (richiede CodeApplication, certificato SSL) → token in header AuthToken
+Servizi presenti: documenti (CRUD, predisposto, ricerca, eventi, allegati, big files in chunks), fascicoli, rubrica, trasmissioni, libro firma, ruoli/registri/titolari
+Concetti chiave: documento "predisposto" (creato senza protocollo, poi protocollabile) — questo è strategico per l'integrazione
+Limiti rilevati nei diagrammi: nessun webhook/notifiche push, polling-based via SearchDocEvents e GetModifiedDocuments
+
+Procedo a generare l'analisi. Dato che è un deliverable strutturato e analitico ma per uso interno/discussione progettuale, lo metto in un artifact markdown — leggibile in chat e copiabile facilmente. Più utile del docx in questa fase di discovery.Skill MD per artifactSkill MD per artifactNiente skill specifica per markdown lungo, procedo direttamente. Creo il documento di analisi nella outputs directory.File creato, eseguito un comando, file lettoFile creato, eseguito un comando, file lettoHo prodotto un'analisi strutturata che copre i punti che ritengo critici per l'integrazione Spaces+ ↔ P.I.Tre. Ecco i takeaway principali:
+Cosa funziona bene nell'API P.I.Tre per la vostra integrazione
+
+Copertura funzionale completa: documenti, fascicoli, ricerca, trasmissioni, libro firma, rubrica, allegati grandi (chunking)
+Pattern del documento "Predisposto" che è perfettamente allineato alla filosofia del SOW (disaccoppiare preparazione da ufficialità) — questo secondo me è il perno tecnico dell'integrazione
+Architettura via gateway RouteRestRequest che semplifica la gestione multi-AOO
+
+I cinque punti che vi consiglio di non sottovalutare
+
+Niente webhook: tutto è polling-based. Per un cliente Protezione Civile dove la latenza informativa può essere critica, il disegno del service di sincronizzazione (SearchDocEvents + cursori) va trattato come componente di prima classe, non come dettaglio implementativo.
+Modello del fascicolo: il SOW lascia volutamente aperta la decisione, ma è una scelta che impatta tutto il resto. Vi consiglio l'opzione "fascicolo P.I.Tre come autoritativo + spazio Spaces+ collaborativo agganciato per riferimento" — è quella più aderente alla normativa e al principio di P.I.Tre come "punto di certificazione".
+Libro Firma vs Camunda: c'è una potenziale sovrapposizione che va risolta, probabilmente con uno scenario ibrido (Camunda invoca Libro Firma P.I.Tre come task service).
+Idempotenza e correlazione: l'API non ha idempotency keys → l'adapter Spaces+ deve implementarla lato client per evitare documenti duplicati su retry.
+Domande operative aperte verso TnDigit: ho elencato 10 punti concreti (CodeApplication, certificati, SLA, rate limiting, vocabolario eventi, ecc.) che vanno chiariti prima di chiudere l'Analisi Tecnica.
+
+Il documento è impostato come traccia per arricchire il documento di Analisi Tecnica della Fase 1 del SOW. Se vuoi posso approfondire un'area specifica — per esempio dettagliare il disegno tecnico dell'adapter con sequence diagram, oppure scendere sul service di sincronizzazione con politiche di backoff e dimensionamento, o produrre un primo abbozzo di OpenAPI/contract dell'SDK lato Spaces+.
