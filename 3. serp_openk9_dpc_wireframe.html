@@ -1,0 +1,290 @@
+<h2 class="sr-only">Wireframe della SERP OpenK9 per il portale documentale Spaces+ del Dipartimento Protezione Civile</h2>
+
+<style>
+.serp-frame { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; font-size: 13px; }
+.serp-header { padding: 14px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; gap: 12px; }
+.logo-mock { width: 90px; height: 22px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; font-weight: 500; color: var(--color-text-secondary); font-size: 11px; flex-shrink: 0; }
+.search-box { flex: 1; position: relative; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 8px 12px 8px 32px; display: flex; align-items: center; gap: 8px; }
+.search-icon { position: absolute; left: 10px; width: 14px; height: 14px; color: var(--color-text-secondary); }
+.search-text { color: var(--color-text-primary); flex: 1; font-size: 13px; }
+.search-cursor { display: inline-block; width: 1px; height: 14px; background: var(--color-text-primary); animation: blink 1s infinite; vertical-align: middle; }
+@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+.user-pill { background: var(--color-background-secondary); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); flex-shrink: 0; }
+.acl-banner { background: var(--color-background-info); padding: 8px 16px; font-size: 12px; color: var(--color-text-info); display: flex; align-items: center; gap: 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.acl-icon { width: 12px; height: 12px; flex-shrink: 0; }
+.chips-row { padding: 10px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; }
+.chip-label { color: var(--color-text-secondary); margin-right: 4px; }
+.chip { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 4px 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-primary); border: 0.5px solid var(--color-border-tertiary); }
+.chip-x { color: var(--color-text-tertiary); cursor: pointer; font-size: 13px; line-height: 1; }
+.chip-clear { color: var(--color-text-info); cursor: pointer; font-size: 12px; margin-left: auto; text-decoration: underline; }
+.serp-body { display: grid; grid-template-columns: 200px 1fr; min-height: 600px; }
+.filters-pane { padding: 16px 14px; border-right: 0.5px solid var(--color-border-tertiary); background: var(--color-background-tertiary); }
+.filter-group { margin-bottom: 18px; }
+.filter-label { font-weight: 500; font-size: 12px; color: var(--color-text-primary); margin-bottom: 8px; }
+.filter-input { width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 12px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); color: var(--color-text-primary); }
+.filter-checkbox { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 0; color: var(--color-text-primary); }
+.filter-checkbox input { margin: 0; }
+.filter-count { color: var(--color-text-tertiary); margin-left: auto; font-size: 11px; }
+.quick-chip { display: inline-block; padding: 3px 8px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; font-size: 11px; margin: 2px 3px 2px 0; color: var(--color-text-secondary); cursor: pointer; }
+.quick-chip.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.advanced-toggle { font-size: 12px; color: var(--color-text-info); cursor: pointer; padding: 6px 0; border-top: 0.5px solid var(--color-border-tertiary); margin-top: 6px; }
+.results-pane { display: flex; flex-direction: column; }
+.entity-tabs { display: flex; padding: 0 16px; border-bottom: 0.5px solid var(--color-border-tertiary); gap: 24px; }
+.entity-tab { padding: 12px 0; font-size: 13px; color: var(--color-text-secondary); border-bottom: 2px solid transparent; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.entity-tab.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); font-weight: 500; }
+.entity-icon { width: 14px; height: 14px; }
+.tab-count { color: var(--color-text-tertiary); font-size: 12px; }
+.results-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.sort-select { padding: 4px 22px 4px 8px; font-size: 12px; background: transparent; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); color: var(--color-text-primary); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M2 4l3 3 3-3' stroke='%23999' fill='none' stroke-width='1'/></svg>"); background-repeat: no-repeat; background-position: right 6px center; }
+.results-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.result-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; }
+.result-card:hover { border-color: var(--color-border-secondary); }
+.card-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.entity-badge { padding: 2px 8px; border-radius: var(--border-radius-md); font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+.badge-fasc { background: #EEEDFE; color: #3C3489; }
+.badge-sched { background: #E1F5EE; color: #085041; }
+.badge-doc { background: #FAEEDA; color: #633806; }
+.flow-pill { padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 500; background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.state-pill { padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 500; }
+.state-aperto { background: #EAF3DE; color: #3B6D11; }
+.state-itinere { background: #FAEEDA; color: #854F0B; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 4px 0 6px; line-height: 1.4; }
+.card-meta-line { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+.card-meta-line strong { font-weight: 500; color: var(--color-text-primary); }
+.card-snippet { background: var(--color-background-tertiary); border-left: 2px solid var(--color-border-secondary); border-radius: 0; padding: 6px 10px; margin: 8px 0; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.card-snippet mark { background: #FAEEDA; color: #633806; padding: 0 2px; border-radius: 2px; }
+.card-actions { display: flex; gap: 12px; margin-top: 8px; font-size: 12px; }
+.card-action { color: var(--color-text-info); cursor: pointer; text-decoration: none; }
+.card-action.secondary { color: var(--color-text-secondary); }
+.signature-icon { color: #0F6E56; font-size: 11px; }
+.pagination { padding: 16px; display: flex; justify-content: center; align-items: center; gap: 6px; border-top: 0.5px solid var(--color-border-tertiary); font-size: 12px; }
+.page-btn { padding: 4px 9px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: transparent; color: var(--color-text-primary); cursor: pointer; font-size: 12px; }
+.page-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.page-ellipsis { color: var(--color-text-tertiary); padding: 0 4px; }
+.dropdown-mock { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 0; margin-top: 4px; max-height: 140px; overflow-y: auto; }
+.dropdown-item { padding: 5px 10px; font-size: 12px; color: var(--color-text-primary); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.dropdown-item:hover { background: var(--color-background-secondary); }
+.dropdown-item input { margin: 0; }
+</style>
+
+<div class="serp-frame">
+
+  <div class="serp-header">
+    <div class="logo-mock">Spaces+</div>
+    <div class="search-box">
+      <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+      <span class="search-text">frana marche 2025<span class="search-cursor"></span></span>
+    </div>
+    <div class="user-pill">MR</div>
+  </div>
+
+  <div class="acl-banner">
+    <svg class="acl-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="5" width="7" height="5" rx="1"/><path d="M4 5V3.5a2 2 0 014 0V5"/></svg>
+    Risultati filtrati secondo le tue ACL · Cercando come: Funzionario · Servizio Volontariato
+  </div>
+
+  <div class="chips-row">
+    <span class="chip-label">Filtri attivi:</span>
+    <span class="chip">Tipologia: Decreti <span class="chip-x">×</span></span>
+    <span class="chip">Anno: 2025 <span class="chip-x">×</span></span>
+    <span class="chip">Mittente: Capo Dipartimento <span class="chip-x">×</span></span>
+    <span class="chip-clear">Pulisci tutti</span>
+  </div>
+
+  <div class="serp-body">
+
+    <div class="filters-pane">
+
+      <div class="filter-group">
+        <div class="filter-label">Data protocollo</div>
+        <div>
+          <span class="quick-chip">7gg</span>
+          <span class="quick-chip active">30gg</span>
+          <span class="quick-chip">1 anno</span>
+          <span class="quick-chip">Tutto</span>
+        </div>
+        <div style="display: flex; gap: 4px; margin-top: 6px;">
+          <input type="text" class="filter-input" placeholder="dal" value="01/03/2025" style="font-size: 11px;">
+          <input type="text" class="filter-input" placeholder="al" value="31/03/2025" style="font-size: 11px;">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Tipologia documentale</div>
+        <input type="text" class="filter-input" placeholder="Cerca tipologia..." value="Decreti">
+        <div class="dropdown-mock">
+          <div class="dropdown-item"><input type="checkbox" checked> Decreti <span class="filter-count">87</span></div>
+          <div class="dropdown-item"><input type="checkbox"> Decreto Capo Dip. <span class="filter-count">12</span></div>
+          <div class="dropdown-item"><input type="checkbox"> Determine <span class="filter-count">203</span></div>
+          <div class="dropdown-item"><input type="checkbox"> Direttiva <span class="filter-count">31</span></div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Mittente</div>
+        <input type="text" class="filter-input" placeholder="Cerca mittente..." value="Capo Dipartimento">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Destinatario</div>
+        <input type="text" class="filter-input" placeholder="Cerca destinatario...">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Fascicolo</div>
+        <input type="text" class="filter-input" placeholder="Cerca fascicolo...">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Classificazione</div>
+        <select class="filter-input">
+          <option>— Tutte le voci —</option>
+          <option>4. Bilancio</option>
+          <option>4.38 Volontariato</option>
+        </select>
+      </div>
+
+      <div class="advanced-toggle">+ Filtri avanzati (5)</div>
+    </div>
+
+    <div class="results-pane">
+
+      <div class="entity-tabs">
+        <div class="entity-tab">
+          <svg class="entity-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 4a1 1 0 011-1h3l1 1.5h4a1 1 0 011 1V11a1 1 0 01-1 1H3a1 1 0 01-1-1V4z"/></svg>
+          Fascicoli <span class="tab-count">24</span>
+        </div>
+        <div class="entity-tab active">
+          <svg class="entity-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="2" width="8" height="10" rx="1"/><path d="M5 5h4M5 7h4M5 9h2"/></svg>
+          Schede <span class="tab-count">137</span>
+        </div>
+        <div class="entity-tab">
+          <svg class="entity-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 2h4l3 3v7a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M8 2v3h3"/></svg>
+          Documenti <span class="tab-count">412</span>
+        </div>
+      </div>
+
+      <div class="results-header">
+        <span><strong style="color: var(--color-text-primary); font-weight: 500;">573 risultati</strong> per "frana marche 2025" in 0,4s</span>
+        <select class="sort-select">
+          <option>Rilevanza</option>
+          <option>Data più recente</option>
+          <option>Data più vecchia</option>
+          <option>N. protocollo</option>
+        </select>
+      </div>
+
+      <div class="results-list">
+
+        <div class="result-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-fasc">📁 Fascicolo</span>
+            <span class="state-pill state-aperto">Aperto</span>
+            <span class="flow-pill">Procedimento amministrativo</span>
+          </div>
+          <div class="card-title">Stato di emergenza Frana Marche 2025</div>
+          <div class="card-meta-line">
+            <strong>Codice:</strong> 2.1.5/00872/2025 · <strong>Aperto:</strong> 03/03/2025 · <strong>Stato:</strong> In itinere
+          </div>
+          <div class="card-meta-line">
+            <strong>Contiene:</strong> 14 schede, 31 documenti, 2 sottofascicoli
+          </div>
+          <div class="card-snippet">
+            "...interventi urgenti per il dissesto causato dalla <mark>frana</mark> nel territorio delle <mark>Marche</mark>, con stanziamento delle risorse previste per il 2025..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action">Apri fascicolo</span>
+            <span class="card-action secondary">Vedi documenti contenuti (45)</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-sched">📋 Scheda documentale</span>
+            <span class="flow-pill">In partenza</span>
+            <span class="state-pill state-itinere">Decreto</span>
+            <span class="signature-icon">✓ HSM Pades</span>
+          </div>
+          <div class="card-title">Decreto di approvazione interventi urgenti — Frana Camerino e zone limitrofe</div>
+          <div class="card-meta-line">
+            <strong>Protocollo:</strong> DPC/EM/2025/1234 del 15/03/2025
+          </div>
+          <div class="card-meta-line">
+            <strong>Mittente:</strong> Capo Dipartimento · <strong>Destinatari:</strong> Regione Marche, Comune di Camerino, +1 altro
+          </div>
+          <div class="card-meta-line">
+            <strong>Fascicolo:</strong> Stato di emergenza Frana Marche 2025
+          </div>
+          <div class="card-snippet">
+            "...visto l'art. 5 del D.Lgs. 1/2018, considerati gli effetti della <mark>frana</mark> verificatasi nel territorio delle <mark>Marche</mark> in data..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action">Apri scheda</span>
+            <span class="card-action secondary">📎 1 PDF firmato</span>
+            <span class="card-action secondary">Anteprima</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-doc">📄 Documento · PDF</span>
+            <span class="flow-pill">2.3 MB · v3</span>
+            <span class="signature-icon">✓ Firmato</span>
+          </div>
+          <div class="card-title">Decreto_emergenza_marche_2025_signed.pdf</div>
+          <div class="card-meta-line">
+            <strong>Da scheda:</strong> Decreto approvazione interventi urgenti
+          </div>
+          <div class="card-meta-line">
+            <strong>Fascicolo:</strong> Stato di emergenza Frana Marche 2025 · <strong>Caricato:</strong> 12/03/2026
+          </div>
+          <div class="card-snippet">
+            "...la presente ordinanza, ai sensi dell'art. 25 del Codice della Protezione Civile, autorizza interventi sul territorio delle <mark>Marche</mark> colpito dalla <mark>frana</mark>..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action">Anteprima inline</span>
+            <span class="card-action">Scarica</span>
+            <span class="card-action secondary">Apri scheda padre</span>
+            <span class="card-action secondary">Vedi 2 versioni</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-sched">📋 Scheda documentale</span>
+            <span class="flow-pill">In arrivo</span>
+            <span class="state-pill state-aperto">Relazione di sopralluogo</span>
+          </div>
+          <div class="card-title">Relazione tecnica di sopralluogo — Area frana Marche, settore A</div>
+          <div class="card-meta-line">
+            <strong>Protocollo:</strong> DPC/2025/0098876 del 08/03/2025 · <strong>Trovato in:</strong> Oggetto, Allegato 1 (PDF)
+          </div>
+          <div class="card-meta-line">
+            <strong>Mittente:</strong> CNR — IRPI Perugia
+          </div>
+          <div class="card-snippet">
+            "Sopralluogo effettuato a seguito della <mark>frana</mark> verificatasi nelle <mark>Marche</mark>: rilievi geologici, valutazione del rischio residuo, raccomandazioni..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action">Apri scheda</span>
+            <span class="card-action secondary">📎 3 allegati</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pagination">
+        <button class="page-btn">‹ Precedente</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <span class="page-ellipsis">…</span>
+        <button class="page-btn">23</button>
+        <button class="page-btn">Successiva ›</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
