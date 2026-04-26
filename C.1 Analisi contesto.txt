@@ -1,0 +1,17 @@
+Ho ricevuto i tre documenti. Prima di analizzarli in profondità e darti un riscontro utile, lascia che faccia un primo inquadramento basato su quello che vedo dai contenuti finora accessibili:
+Contesto attuale (P.I.Tre)
+Dal Manuale di gestione emerge chiaramente l'architettura del protocollo informatico del Consiglio della Provincia Autonoma di Trento:
+
+Due AOO distinte (Consiglio provinciale - CPTN, e Difensore civico - DCTN), ciascuna con proprio registro di protocollo
+Modello organizzativo basato su UOR e RPA, con responsabilità ben definite (responsabile del registro, amministratori di sistema)
+Tipologie documentali rigorose: arrivo / partenza / interno (formale e informale, quest'ultimo come "documento grigio")
+Workflow consolidati per protocollazione, segnatura, classificazione (Titolario a 6 macroaree), fascicolazione, gestione PEC/PEO
+Vincoli normativi forti: DPR 445/2000, DPCM 3 dicembre 2013, regole su firma digitale, conservazione, registro di emergenza
+
+Cosa mi serve approfondire prima di poter essere davvero utile
+Ho letto il manuale, ma non ho ancora esaminato:
+
+Il SOW del nuovo portale (.docx) — dove sono descritti scope, requisiti funzionali, deliverable, vincoli del progetto di sviluppo
+Le API REST di P.I.Tre (PI_TRE_WS_REST_01_04.pdf) — che definiscono i punti di integrazione disponibili
+
+Per darti un'analisi che ti serva davvero (gap analysis, rischi di integrazione, suggerimenti architetturali, punti di attenzione contrattuali sul SOW, ecc.), vorrei prima leggerli entrambi.
