@@ -10,16 +10,29 @@ Chiedo a Claude di esaminarli per una prima idea del progetto. In C.1 riporto la
 Chiedo quindi a Claude di produrre una analisi di integrazione API protocollo ↔ portale: la riporto in 1. E riporto in C.2 le osservazioni di Claude durante la produzione dell'analisi.
 <br>
 Quindi, vengo al punto spinoso: l'analisi funzionale sulla ricerca avanzata.
-Analizzando le fonti documentali a disposizione:
-- Matrice Strutturale delle Tipologie Documentali e dei Metadati (Sistema GeDoP).docx
-- Protocolli e Formati Documentali del Sistema PiTre GeDoP.docx
-- Metadati Tipologie Documentali Sistema GeDoP.xlsx
-- Matrice Visibilità_ Profilo Utente vs Natura del Contenuto.xlsx
-- Repo PITRe (protocollo usato da Protezione Civile): https://github.com/ProvinciaAutonomaTrento/PITre
-- KB LLM PI.Tre (interna SMC): https://notebooklm.google.com/notebook/22109c44-2f97-4822-bfde-40004d39a792?pli=1
 <br>
-non risulta chiaro:
+Analizzando le fonti documentali a disposizione:<br>
+- Matrice Strutturale delle Tipologie Documentali e dei Metadati (Sistema GeDoP).docx<br>
+- Protocolli e Formati Documentali del Sistema PiTre GeDoP.docx<br>
+- Metadati Tipologie Documentali Sistema GeDoP.xlsx<br>
+- Matrice Visibilità_ Profilo Utente vs Natura del Contenuto.xlsx<br>
+- Repo PITRe (protocollo usato da Protezione Civile): https://github.com/ProvinciaAutonomaTrento/PITre<br>
+- KB LLM PI.Tre (interna SMC): https://notebooklm.google.com/notebook/22109c44-2f97-4822-bfde-40004d39a792?pli=1<br>
+<br>
+non risulta chiaro:<br>
 - quali sono le entità documentali da trattare, sia come oggetti ricercabili, che come elementi da indicizzare: le entità candidate sono il Fascicolo e il Documento (o Scheda documentale)
 - quale è il modello dati per le entità da trattare: metadati, domini, ecc - le fonti a disposizioni sono lacunose e/o contrastanti
+<br><br>
+e questo rende difficoltoso progettare l'esperienze utente di ricerca e anche dare indicazioni sul disegno di un mockup per la SERP.
 <br>
-e questo rende difficoltoso progettare l'esperienze utente di ricerca e anche dare indicazioni sul disegno di un mockup per la SERP
+Pertanto condivido a Claude:<br>
+- Matrice Strutturale delle Tipologie Documentali e dei Metadati (Sistema GeDoP).docx<br>
+- Metadati Tipologie Documentali Sistema GeDoP.xlsx<br>
+- DPC - Analisi funzionale OpenK9 - 2026-04-20 - bozza.docx: la mia analisi funzionale che integra anche mie interazioni con la fonte "KB LLM PI.Tre"<br>
+e chiedo:<br>
+  
+Ora devi focalizzare sulla funzione di ricerca avanzata da sviluppare nel nuovo portale grazie a OpenK9 (https://github.com/smclab/openk9). Mi occorre infatti una analisi funzionale e un disegno wireframe per proporre una SERP che implementi l'esperienza di ricerca ottimale per l'utente. Considera le ulteriori informazioni che mi sono state indicate, con particolare riguardo alle entità e al modello dati degli oggetti del sistema protocollo che devono essere resi ricercabili, previa opportuna indicizzazione, da parte di OpenK9. In allegato ci sono alcuni documenti di riferimento. Per la SERP, indicami quindi: cosa può ricercare l'utente, cosa può digitare sulla barra di ricerca, quali possibili filtri di ricerca ha senso implementare, se ci sono filtri implementabili con elenchi dropdown di valori, come può essere strutturata l'area con i risultati della ricerca.
+  
+     
+
+
