@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spaces+ · Ricerca avanzata · OpenK9</title>
+<style>
+:root {
+  --bg-page: #0B0E14;
+  --bg-surface: #11151D;
+  --bg-elevated: #161B25;
+  --bg-input: #0F141C;
+  --bg-hover: #1A2030;
+  --bg-active: #1F2638;
+  --border-subtle: #1F2632;
+  --border-default: #2A3242;
+  --border-strong: #3A4458;
+  --text-primary: #E6EBF4;
+  --text-secondary: #97A0B5;
+  --text-tertiary: #5C6680;
+  --accent: #5B8DEF;
+  --accent-hover: #7BA3F2;
+  --accent-bg: rgba(91, 141, 239, 0.12);
+  --accent-border: rgba(91, 141, 239, 0.35);
+  --color-fasc: #B49AFF;
+  --color-fasc-bg: rgba(180, 154, 255, 0.12);
+  --color-fasc-border: rgba(180, 154, 255, 0.28);
+  --color-sched: #4DD4A8;
+  --color-sched-bg: rgba(77, 212, 168, 0.12);
+  --color-sched-border: rgba(77, 212, 168, 0.28);
+  --color-doc: #F5B14C;
+  --color-doc-bg: rgba(245, 177, 76, 0.12);
+  --color-doc-border: rgba(245, 177, 76, 0.28);
+  --color-success: #4DD4A8;
+  --color-warning: #F5B14C;
+  --highlight-bg: rgba(245, 177, 76, 0.22);
+  --highlight-text: #F5B14C;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-focus: 0 0 0 3px rgba(91, 141, 239, 0.25);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(91, 141, 239, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(180, 154, 255, 0.04) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+.page-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.serp-frame {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+/* HEADER */
+.serp-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(91, 141, 239, 0.03), transparent);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding-right: 16px;
+  border-right: 1px solid var(--border-subtle);
+  margin-right: 4px;
+}
+
+.brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #5B8DEF, #B49AFF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.brand-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.brand-name span {
+  color: var(--accent);
+}
+
+.search-box {
+  flex: 1;
+  position: relative;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 10px 14px 10px 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.search-box:hover {
+  border-color: var(--border-strong);
+}
+
+.search-box.focused {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-focus);
+  background: var(--bg-elevated);
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+}
+
+.search-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.search-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 16px;
+  background: var(--accent);
+  animation: blink 1s infinite;
+  vertical-align: middle;
+  margin-left: 1px;
+}
+
+.search-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.user-pill {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4DD4A8, #5B8DEF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
+  border: 2px solid var(--bg-surface);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.user-pill:hover {
+  transform: scale(1.05);
+}
+
+/* ACL BANNER */
+.acl-banner {
+  background: linear-gradient(90deg, var(--accent-bg), transparent);
+  padding: 10px 20px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent);
+}
+
+.acl-banner strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.acl-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.acl-help {
+  margin-left: auto;
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: help;
+}
+
+/* CHIPS ROW */
+.chips-row {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  background: var(--bg-surface);
+}
+
+.chip-label {
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.chip {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-pill);
+  padding: 5px 10px 5px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.chip-key {
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.chip-x {
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+}
+
+.chip-x:hover {
+  background: rgba(245, 100, 100, 0.15);
+  color: #F56464;
+}
+
+.chip-clear {
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: auto;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s ease;
+}
+
+.chip-clear:hover {
+  background: var(--accent-bg);
+}
+
+/* BODY GRID */
+.serp-body {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 700px;
+}
+
+/* FILTERS PANE */
+.filters-pane {
+  padding: 24px 18px;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-page);
+  overflow-y: auto;
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.filters-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.filters-reset {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.filters-reset:hover {
+  color: var(--accent);
+}
+
+.filter-group {
+  margin-bottom: 22px;
+}
+
+.filter-label {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.filter-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.filter-input:hover {
+  border-color: var(--border-strong);
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-focus);
+}
+
+.filter-input.with-icon {
+  padding-left: 32px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none' stroke='%235C6680' stroke-width='1.5'><circle cx='7' cy='7' r='5'/><path d='M11 11l3 3'/></svg>");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
+
+.quick-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.quick-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+
+.quick-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.quick-chip.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+
+.date-range {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.date-input {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 11.5px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.dropdown-mock {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 4px 0;
+  margin-top: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.dropdown-mock::-webkit-scrollbar { width: 6px; }
+.dropdown-mock::-webkit-scrollbar-track { background: transparent; }
+.dropdown-mock::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+
+.dropdown-item {
+  padding: 7px 12px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item:hover { background: var(--bg-hover); }
+
+.dropdown-item.checked { color: var(--accent); }
+
+.checkbox-mock {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-input);
+  transition: all 0.15s ease;
+}
+
+.checkbox-mock.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox-mock.checked::after {
+  content: '';
+  width: 4px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.filter-count {
+  color: var(--text-tertiary);
+  margin-left: auto;
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.advanced-toggle {
+  font-size: 12px;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.advanced-toggle:hover { color: var(--accent-hover); }
+
+.advanced-toggle svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s ease;
+}
+
+/* RESULTS PANE */
+.results-pane {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+}
+
+/* ENTITY TABS */
+.entity-tabs {
+  display: flex;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 4px;
+  background: var(--bg-surface);
+}
+
+.entity-tab {
+  padding: 16px 14px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  font-weight: 500;
+  margin-bottom: -1px;
+}
+
+.entity-tab:hover { color: var(--text-primary); }
+
+.entity-tab.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.entity-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.tab-count {
+  background: var(--bg-active);
+  color: var(--text-tertiary);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.entity-tab.active .tab-count {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* RESULTS HEADER */
+.results-header {
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.results-count strong {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.results-time {
+  color: var(--text-tertiary);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 11.5px;
+}
+
+.results-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  gap: 2px;
+}
+
+.view-btn {
+  padding: 5px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.view-btn:hover { color: var(--text-primary); }
+
+.view-btn.active {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.view-btn svg { width: 14px; height: 14px; }
+
+.sort-select {
+  padding: 6px 28px 6px 10px;
+  font-size: 12.5px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  font-family: inherit;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M2 4l3 3 3-3' stroke='%2397A0B5' fill='none' stroke-width='1.5' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: all 0.15s ease;
+}
+
+.sort-select:hover { border-color: var(--border-strong); }
+
+/* RESULTS LIST */
+.results-list {
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.result-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  transition: all 0.18s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.result-card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.result-card.fasc-card { border-left: 3px solid var(--color-fasc); }
+.result-card.sched-card { border-left: 3px solid var(--color-sched); }
+.result-card.doc-card { border-left: 3px solid var(--color-doc); }
+
+.card-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.entity-badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.entity-badge svg { width: 11px; height: 11px; }
+
+.badge-fasc {
+  background: var(--color-fasc-bg);
+  color: var(--color-fasc);
+  border: 1px solid var(--color-fasc-border);
+}
+
+.badge-sched {
+  background: var(--color-sched-bg);
+  color: var(--color-sched);
+  border: 1px solid var(--color-sched-border);
+}
+
+.badge-doc {
+  background: var(--color-doc-bg);
+  color: var(--color-doc);
+  border: 1px solid var(--color-doc-border);
+}
+
+.flow-pill {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-active);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.state-pill {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.state-pill::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-aperto {
+  background: rgba(77, 212, 168, 0.12);
+  color: var(--color-success);
+  border: 1px solid rgba(77, 212, 168, 0.28);
+}
+
+.state-itinere {
+  background: rgba(245, 177, 76, 0.12);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 177, 76, 0.28);
+}
+
+.signature-pill {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(77, 212, 168, 0.10);
+  color: var(--color-success);
+  border: 1px solid rgba(77, 212, 168, 0.22);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.signature-pill svg { width: 10px; height: 10px; }
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 6px 0 10px;
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+}
+
+.card-title:hover { color: var(--accent-hover); }
+
+.card-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 4px;
+}
+
+.card-meta-line {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.card-meta-line .meta-key {
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+  flex-shrink: 0;
+}
+
+.card-meta-line .meta-val {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.card-meta-line .meta-val.code {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 11.5px;
+  background: var(--bg-input);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.card-snippet {
+  background: var(--bg-input);
+  border-left: 2px solid var(--border-strong);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.card-snippet mark {
+  background: var(--highlight-bg);
+  color: var(--highlight-text);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.card-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.card-action {
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+}
+
+.card-action:hover {
+  color: var(--text-primary);
+  background: var(--bg-active);
+}
+
+.card-action.primary {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.card-action.primary:hover {
+  background: rgba(91, 141, 239, 0.2);
+  color: var(--accent-hover);
+}
+
+.card-action svg { width: 12px; height: 12px; }
+
+/* PAGINATION */
+.pagination {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 12.5px;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 12.5px;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.page-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.page-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.page-btn.nav { padding: 6px 14px; gap: 4px; }
+.page-btn.nav svg { width: 12px; height: 12px; }
+
+.page-ellipsis {
+  color: var(--text-tertiary);
+  padding: 0 6px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-page); }
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 5px;
+  border: 2px solid var(--bg-page);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .serp-body { grid-template-columns: 220px 1fr; }
+  .card-meta-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .page-wrapper { padding: 12px; }
+  .serp-body { grid-template-columns: 1fr; }
+  .filters-pane { display: none; }
+  .brand { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+<div class="serp-frame">
+
+  <!-- HEADER -->
+  <div class="serp-header">
+    <div class="brand">
+      <div class="brand-logo">S+</div>
+      <div class="brand-name">Spaces<span>+</span></div>
+    </div>
+    <div class="search-box focused">
+      <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="7" cy="7" r="5"/>
+        <path d="M11 11l3 3"/>
+      </svg>
+      <span class="search-text">frana marche 2025<span class="search-cursor"></span></span>
+      <div class="search-shortcut">⌘K</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" title="Notifiche">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3.5 6.5a4.5 4.5 0 119 0c0 4 2 5 2 5h-13s2-1 2-5z"/>
+          <path d="M6.5 14a1.5 1.5 0 003 0"/>
+        </svg>
+      </button>
+      <button class="icon-btn" title="Aiuto">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="8" cy="8" r="6.5"/>
+          <path d="M6.5 6.5a1.5 1.5 0 113 0c0 1.5-1.5 1.5-1.5 3"/>
+          <circle cx="8" cy="11.5" r="0.5" fill="currentColor"/>
+        </svg>
+      </button>
+      <div class="user-pill">MR</div>
+    </div>
+  </div>
+
+  <!-- ACL BANNER -->
+  <div class="acl-banner">
+    <svg class="acl-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <rect x="3" y="6" width="8" height="6" rx="1"/>
+      <path d="M5 6V4a2 2 0 014 0v2"/>
+    </svg>
+    <span><strong>Risultati filtrati secondo le tue ACL</strong> · Cercando come <strong>Funzionario · Servizio Volontariato</strong></span>
+    <span class="acl-help">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 11.5v-3M8 5.5h.01"/></svg>
+      Cosa significa?
+    </span>
+  </div>
+
+  <!-- ACTIVE CHIPS -->
+  <div class="chips-row">
+    <span class="chip-label">Filtri attivi</span>
+    <span class="chip"><span class="chip-key">Tipologia</span> Decreti <span class="chip-x">×</span></span>
+    <span class="chip"><span class="chip-key">Anno</span> 2025 <span class="chip-x">×</span></span>
+    <span class="chip"><span class="chip-key">Mittente</span> Capo Dipartimento <span class="chip-x">×</span></span>
+    <span class="chip-clear">Pulisci tutti</span>
+  </div>
+
+  <!-- BODY -->
+  <div class="serp-body">
+
+    <!-- FILTERS PANE -->
+    <div class="filters-pane">
+
+      <div class="filters-header">
+        <div class="filters-title">Filtri di ricerca</div>
+        <a class="filters-reset">Reset</a>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Data protocollo</div>
+        <div class="quick-chip-row">
+          <span class="quick-chip">7gg</span>
+          <span class="quick-chip active">30gg</span>
+          <span class="quick-chip">1 anno</span>
+          <span class="quick-chip">Tutto</span>
+        </div>
+        <div class="date-range">
+          <input type="text" class="date-input" placeholder="dal" value="01/03/2025">
+          <input type="text" class="date-input" placeholder="al" value="31/03/2025">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Tipologia documentale</div>
+        <input type="text" class="filter-input with-icon" placeholder="Cerca tra 152 tipologie..." value="Decreti">
+        <div class="dropdown-mock">
+          <div class="dropdown-item checked">
+            <div class="checkbox-mock checked"></div>
+            Decreti <span class="filter-count">87</span>
+          </div>
+          <div class="dropdown-item">
+            <div class="checkbox-mock"></div>
+            Decreto Capo Dip. <span class="filter-count">12</span>
+          </div>
+          <div class="dropdown-item">
+            <div class="checkbox-mock"></div>
+            Determine <span class="filter-count">203</span>
+          </div>
+          <div class="dropdown-item">
+            <div class="checkbox-mock"></div>
+            Direttiva <span class="filter-count">31</span>
+          </div>
+          <div class="dropdown-item">
+            <div class="checkbox-mock"></div>
+            Ordinanze <span class="filter-count">156</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Mittente</div>
+        <input type="text" class="filter-input with-icon" placeholder="Da rubrica..." value="Capo Dipartimento">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Destinatario</div>
+        <input type="text" class="filter-input with-icon" placeholder="Da rubrica...">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Fascicolo</div>
+        <input type="text" class="filter-input with-icon" placeholder="Cerca fascicolo...">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Classificazione</div>
+        <select class="filter-input">
+          <option>— Tutte le voci del titolario —</option>
+          <option>2. Emergenze</option>
+          <option>2.1 Stati di emergenza</option>
+          <option>4. Bilancio</option>
+          <option>4.38 Volontariato</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Registro</div>
+        <select class="filter-input">
+          <option>DPC — Protezione Civile</option>
+        </select>
+      </div>
+
+      <div class="advanced-toggle">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5l3 3 3-3"/></svg>
+        Filtri avanzati (5)
+      </div>
+    </div>
+
+    <!-- RESULTS PANE -->
+    <div class="results-pane">
+
+      <!-- ENTITY TABS -->
+      <div class="entity-tabs">
+        <div class="entity-tab">
+          <svg class="entity-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 5a1 1 0 011-1h3l1.5 1.5H13a1 1 0 011 1V12a1 1 0 01-1 1H3a1 1 0 01-1-1V5z"/>
+          </svg>
+          Fascicoli <span class="tab-count">24</span>
+        </div>
+        <div class="entity-tab active">
+          <svg class="entity-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.5" y="2" width="9" height="12" rx="1"/>
+            <path d="M6 5.5h4M6 8h4M6 10.5h2.5"/>
+          </svg>
+          Schede documentali <span class="tab-count">137</span>
+        </div>
+        <div class="entity-tab">
+          <svg class="entity-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 2h5l3 3v8a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+            <path d="M9 2v3h3"/>
+          </svg>
+          Documenti <span class="tab-count">412</span>
+        </div>
+      </div>
+
+      <!-- RESULTS HEADER -->
+      <div class="results-header">
+        <div class="results-count">
+          <strong>573 risultati</strong> per "frana marche 2025" <span class="results-time">· 0,4s</span>
+        </div>
+        <div class="results-actions">
+          <div class="view-toggle">
+            <button class="view-btn active" title="Lista compatta">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h10M2 7h10M2 10h10"/></svg>
+            </button>
+            <button class="view-btn" title="Card estese">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="10" height="3.5" rx="0.5"/><rect x="2" y="7.5" width="10" height="3.5" rx="0.5"/></svg>
+            </button>
+            <button class="view-btn" title="Tabella">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="10" height="10" rx="0.5"/><path d="M2 5h10M2 8h10M5.5 5v7M8.5 5v7"/></svg>
+            </button>
+          </div>
+          <select class="sort-select">
+            <option>Rilevanza</option>
+            <option>Data più recente</option>
+            <option>Data più vecchia</option>
+            <option>N. protocollo</option>
+            <option>Alfabetico</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- RESULTS LIST -->
+      <div class="results-list">
+
+        <!-- FASCICOLO -->
+        <div class="result-card fasc-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-fasc">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 4a.5.5 0 01.5-.5h2l1 1h5.5a.5.5 0 01.5.5V9a.5.5 0 01-.5.5H2a.5.5 0 01-.5-.5V4z"/></svg>
+              Fascicolo
+            </span>
+            <span class="state-pill state-aperto">Aperto</span>
+            <span class="flow-pill">Procedimento amministrativo</span>
+          </div>
+          <div class="card-title">Stato di emergenza Frana Marche 2025</div>
+          <div class="card-meta-grid">
+            <div class="card-meta-line">
+              <span class="meta-key">Codice</span>
+              <span class="meta-val code">2.1.5/00872/2025</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Apertura</span>
+              <span class="meta-val">03/03/2025</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Stato lavorazione</span>
+              <span class="meta-val">In itinere</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Consistenza</span>
+              <span class="meta-val">14 schede · 31 documenti · 2 sottofascicoli</span>
+            </div>
+          </div>
+          <div class="card-snippet">
+            "...interventi urgenti per il dissesto causato dalla <mark>frana</mark> nel territorio delle <mark>Marche</mark>, con stanziamento delle risorse previste per il <mark>2025</mark>..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action primary">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h6M6 3l3 3-3 3"/></svg>
+              Apri fascicolo
+            </span>
+            <span class="card-action">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h7M2.5 6h7M2.5 8h4"/></svg>
+              Vedi documenti contenuti (45)
+            </span>
+            <span class="card-action">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6l1.5 4 7-7"/></svg>
+              Aggiungi a watchlist
+            </span>
+          </div>
+        </div>
+
+        <!-- SCHEDA DOCUMENTALE -->
+        <div class="result-card sched-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-sched">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="1.5" width="7" height="9" rx="0.5"/><path d="M4 4h4M4 6h4M4 8h2"/></svg>
+              Scheda documentale
+            </span>
+            <span class="flow-pill">In partenza</span>
+            <span class="flow-pill">Decreto</span>
+            <span class="signature-pill">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6l3 3 5-6"/></svg>
+              HSM Pades
+            </span>
+          </div>
+          <div class="card-title">Decreto di approvazione interventi urgenti — Frana Camerino e zone limitrofe</div>
+          <div class="card-meta-grid">
+            <div class="card-meta-line">
+              <span class="meta-key">Protocollo</span>
+              <span class="meta-val code">DPC/EM/2025/1234</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Data</span>
+              <span class="meta-val">15/03/2025</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Mittente</span>
+              <span class="meta-val">Capo Dipartimento</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Destinatari</span>
+              <span class="meta-val">Regione Marche, Comune di Camerino +1</span>
+            </div>
+            <div class="card-meta-line" style="grid-column: span 2;">
+              <span class="meta-key">Fascicolo</span>
+              <span class="meta-val" style="color: var(--accent);">Stato di emergenza Frana Marche 2025 ↗</span>
+            </div>
+          </div>
+          <div class="card-snippet">
+            "...visto l'art. 5 del D.Lgs. 1/2018, considerati gli effetti della <mark>frana</mark> verificatasi nel territorio delle <mark>Marche</mark> in data..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action primary">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h6M6 3l3 3-3 3"/></svg>
+              Apri scheda
+            </span>
+            <span class="card-action">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 1.5L3 5h2v5.5l3-3.5h-2v-5z" fill="currentColor"/></svg>
+              1 PDF firmato
+            </span>
+            <span class="card-action">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4"/><path d="M6 4v2l1.5 1"/></svg>
+              Anteprima
+            </span>
+          </div>
+        </div>
+
+        <!-- DOCUMENTO -->
+        <div class="result-card doc-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-doc">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 1.5h4l2.5 2.5v6.5a.5.5 0 01-.5.5h-6a.5.5 0 01-.5-.5v-9a.5.5 0 01.5-.5z"/></svg>
+              PDF · 2.3 MB
+            </span>
+            <span class="flow-pill">Versione 3</span>
+            <span class="signature-pill">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6l3 3 5-6"/></svg>
+              Firmato
+            </span>
+          </div>
+          <div class="card-title">Decreto_emergenza_marche_2025_signed.pdf</div>
+          <div class="card-meta-grid">
+            <div class="card-meta-line">
+              <span class="meta-key">Da scheda</span>
+              <span class="meta-val" style="color: var(--accent);">Decreto approvazione interventi urgenti ↗</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Caricato</span>
+              <span class="meta-val">12/03/2026</span>
+            </div>
+            <div class="card-meta-line" style="grid-column: span 2;">
+              <span class="meta-key">Fascicolo</span>
+              <span class="meta-val" style="color: var(--accent);">Stato di emergenza Frana Marche 2025 ↗</span>
+            </div>
+          </div>
+          <div class="card-snippet">
+            "...la presente ordinanza, ai sensi dell'art. 25 del Codice della Protezione Civile, autorizza interventi sul territorio delle <mark>Marche</mark> colpito dalla <mark>frana</mark>..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action primary">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4"/><path d="M6 4v2l1.5 1" stroke-linecap="round"/></svg>
+              Anteprima inline
+            </span>
+            <span class="card-action">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 1.5v7M3 6l3 3 3-3M2 10.5h8"/></svg>
+              Scarica
+            </span>
+            <span class="card-action">Apri scheda padre</span>
+            <span class="card-action">Vedi 2 versioni</span>
+          </div>
+        </div>
+
+        <!-- SCHEDA 2 -->
+        <div class="result-card sched-card">
+          <div class="card-meta-row">
+            <span class="entity-badge badge-sched">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="1.5" width="7" height="9" rx="0.5"/><path d="M4 4h4M4 6h4M4 8h2"/></svg>
+              Scheda documentale
+            </span>
+            <span class="flow-pill">In arrivo</span>
+            <span class="flow-pill">Relazione di sopralluogo</span>
+            <span class="state-pill state-aperto">Acquisita</span>
+          </div>
+          <div class="card-title">Relazione tecnica di sopralluogo — Area frana Marche, settore A</div>
+          <div class="card-meta-grid">
+            <div class="card-meta-line">
+              <span class="meta-key">Protocollo</span>
+              <span class="meta-val code">DPC/2025/0098876</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Data</span>
+              <span class="meta-val">08/03/2025</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Mittente</span>
+              <span class="meta-val">CNR — IRPI Perugia</span>
+            </div>
+            <div class="card-meta-line">
+              <span class="meta-key">Match in</span>
+              <span class="meta-val">Oggetto · Allegato 1 (PDF)</span>
+            </div>
+          </div>
+          <div class="card-snippet">
+            "Sopralluogo effettuato a seguito della <mark>frana</mark> verificatasi nelle <mark>Marche</mark>: rilievi geologici, valutazione del rischio residuo, raccomandazioni..."
+          </div>
+          <div class="card-actions">
+            <span class="card-action primary">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h6M6 3l3 3-3 3"/></svg>
+              Apri scheda
+            </span>
+            <span class="card-action">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 1.5L3 5h2v5.5l3-3.5h-2v-5z" fill="currentColor"/></svg>
+              3 allegati
+            </span>
+            <span class="card-action">Anteprima</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination">
+        <button class="page-btn nav">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 3l-3 3 3 3"/></svg>
+          Precedente
+        </button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <span class="page-ellipsis">…</span>
+        <button class="page-btn">23</button>
+        <button class="page-btn nav">
+          Successiva
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 3l3 3-3 3"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>
