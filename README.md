@@ -44,7 +44,7 @@ Domanda molto importante:
 <br><br>
 Riporto la risposta in C.4.
 <br><br>
-Infine chiedo di ricreare un wireframe dark-mode più accattivante che riporto in 4 e (vista parziale) qui sotto.
+Infine chiedo di ricreare un wireframe più completo che riporto in 4 e (vista parziale) qui sotto.
 <br>
 <img width="2502" height="1304" alt="SERP-mockup-high" src="https://github.com/user-attachments/assets/4c51a7f5-f62e-4dee-bf66-146927f5ddbf" />
 
