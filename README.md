@@ -10,7 +10,7 @@ Chiedo a Claude di esaminarli per una prima idea del progetto. In C.1 riporto la
 Chiedo quindi a Claude di produrre una analisi di integrazione API protocollo ↔ portale: la riporto in 1. E riporto in C.2 le osservazioni di Claude durante la produzione dell'analisi.
 <br><br>
 Quindi, vengo al punto spinoso: l'analisi funzionale sulla ricerca avanzata.
-<br>
+<br><br>
 Analizzando le fonti documentali a disposizione:<br>
 - Matrice Strutturale delle Tipologie Documentali e dei Metadati (Sistema GeDoP).docx<br>
 - Protocolli e Formati Documentali del Sistema PiTre GeDoP.docx<br>
@@ -18,12 +18,13 @@ Analizzando le fonti documentali a disposizione:<br>
 - Matrice Visibilità_ Profilo Utente vs Natura del Contenuto.xlsx<br>
 - Repo PITRe (protocollo usato da [cliente])<br>
 - KB LLM PI.Tre (interna)<br>
-<br><br>
+<br>
 non risulta chiaro:<br>
 - quali sono le entità documentali da trattare, sia come oggetti ricercabili, che come elementi da indicizzare: le entità candidate sono il Fascicolo e il Documento (o Scheda documentale)<br>
 - quale è il modello dati per le entità da trattare: metadati, domini, ecc - le fonti a disposizioni sono lacunose e/o contrastanti<br>
 <br><br>
-e questo rende difficoltoso progettare l'esperienze utente di ricerca e anche dare indicazioni sul disegno di un mockup per la SERP.
+e questo rende difficoltoso progettare l'esperienza utente di ricerca e anche dare indicazioni sul disegno di un mockup per la SERP, che viene impostato come segue:<br>
+<img width="1458" height="1056" alt="DPC-K9-SERP" src="https://github.com/user-attachments/assets/837dd048-e1e0-469b-a065-75d73090786d" />
 <br><br>
 Pertanto condivido a Claude:<br>
 - Matrice Strutturale delle Tipologie Documentali e dei Metadati (Sistema GeDoP).docx<br>
